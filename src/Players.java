@@ -1,23 +1,34 @@
+import java.util.Random;
+
 /**
  * Класс создает объект типа Игрок. Содержит методы для управления полями и поведением.
  */
 public class Players {
-    private int stamina;
-    private static int id = 0;
-    private final Integer countId;
+    private Integer stamina;
     private static final int MIN_STAMINA = 0;
     private static final int MAX_STAMINA = 10;
-    private static int countPlayers = 0;
+    private static Integer countPlayers = 0;
     private static final int PLAYERS_ON_FIELD = 6;
+    private static final int START_RANGE_RANDOM_STAMINA_VALUE = 8;
+    private static final int END_RANGE_RANDOM_STAMINA_VALUE = (Players.getMaxStamina() + 1);
 
-    public Players(int stamina) {
+    private Players() {
+
+    }
+
+    private Players(int stamina) {
         this.stamina = stamina;
+        countPlayers++;
+    }
+
+    public static Players addNewPlayer() {
+        Random random = new Random();
+        int randomStaminaValue = random.nextInt(START_RANGE_RANDOM_STAMINA_VALUE, END_RANGE_RANDOM_STAMINA_VALUE);
+
         if (countPlayers < PLAYERS_ON_FIELD) {
-            countPlayers++;
-            countId = id++;
-        }else {
-            countId = null;
+            return new Players(randomStaminaValue);
         }
+        return new Players();
     }
 
     public static int getMaxStamina() {
@@ -32,9 +43,7 @@ public class Players {
      * Метод для управления состоянием игрока, при использовании уменьшает выносливость.
      */
     void run() {
-        if(stamina < 0){
-            stamina = MIN_STAMINA;
-        }else {
+        if (stamina > 0) {
             stamina--;
         }
     }
@@ -42,16 +51,15 @@ public class Players {
     /**
      * Метод проверяет игрока на участие в матче и снижает выносливость выбранного игрока к минимальному значению выносливости.
      */
-    void runUntilTired(){
+    void runUntilTired() {
         boolean isTired = false;
-        while (!isTired){
-            if(countId == null){
-                throw new RuntimeException("Этот игрок не участвовал в матче");
-            }
-            else if(stamina == MIN_STAMINA && countId <= PLAYERS_ON_FIELD){
+        while (!isTired) {
+            if (stamina == null) {
+                break;
+            } else if (stamina == MIN_STAMINA) {
                 isTired = true;
                 countPlayers--;
-            }else {
+            } else {
                 run();
             }
         }
@@ -59,6 +67,7 @@ public class Players {
 
     /**
      * Метод для получения информации о количестве игроков на поле и свободных мест.
+     *
      * @return возвращает информацию о количестве игроков на поле.
      */
     static String info() {
