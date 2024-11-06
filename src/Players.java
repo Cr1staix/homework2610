@@ -1,82 +1,67 @@
+/**
+ * * Создает объект класса Player, содержит методы для управления состоянием и поведением.
+ */
+
 import java.util.Random;
 
-/**
- * Класс создает объект типа Игрок. Содержит методы для управления полями и поведением.
- */
 public class Players {
+    Random random = new Random();
     private Integer stamina;
     private static final int MIN_STAMINA = 0;
     private static final int MAX_STAMINA = 10;
-    private static Integer countPlayers = 0;
-    private static final int PLAYERS_ON_FIELD = 6;
     private static final int START_RANGE_RANDOM_STAMINA_VALUE = 8;
     private static final int END_RANGE_RANDOM_STAMINA_VALUE = (Players.getMaxStamina() + 1);
+    private Game game;
+    private String name;
+    private Integer gameNumber;
 
-    private Players() {
-
+    public Players(String name, Integer gameNumber, Game game) {
+        this.stamina = random.nextInt(START_RANGE_RANDOM_STAMINA_VALUE, END_RANGE_RANDOM_STAMINA_VALUE);
+        this.name = name;
+        this.gameNumber = gameNumber;
+        this.game = game;
     }
 
-    private Players(int stamina) {
-        this.stamina = stamina;
-        countPlayers++;
+    public String getName() {
+        return name;
     }
 
-    public static Players addNewPlayer() {
-        Random random = new Random();
-        int randomStaminaValue = random.nextInt(START_RANGE_RANDOM_STAMINA_VALUE, END_RANGE_RANDOM_STAMINA_VALUE);
+    public void setName(String name) {
+        this.name = name;
+    }
 
-        if (countPlayers < PLAYERS_ON_FIELD) {
-            return new Players(randomStaminaValue);
-        }
-        return new Players();
+    public Integer getGameNumber() {
+        return gameNumber;
+    }
+
+    public void setGameNumber(Integer gameNumber) {
+        this.gameNumber = gameNumber;
     }
 
     public static int getMaxStamina() {
         return MAX_STAMINA;
     }
 
-    public static int getCountPlayers() {
-        return countPlayers;
+    public Integer getStamina() {
+        return stamina;
     }
 
     /**
-     * Метод для управления состоянием игрока, при использовании уменьшает выносливость.
-     */
-    void run() {
-        if (stamina > 0) {
-            stamina--;
-        }
-    }
-
-    /**
-     * Метод проверяет игрока на участие в матче и снижает выносливость выбранного игрока к минимальному значению выносливости.
-     */
-    void runUntilTired() {
-        boolean isTired = false;
-        while (!isTired) {
-            if (stamina == null) {
-                break;
-            } else if (stamina == MIN_STAMINA) {
-                isTired = true;
-                countPlayers--;
-            } else {
-                run();
-            }
-        }
-    }
-
-    /**
-     * Метод для получения информации о количестве игроков на поле и свободных мест.
+     * Метод для управления состоянием выносливости, при снижении до нуля игрок удаляется.
      *
-     * @return возвращает информацию о количестве игроков на поле.
      */
-    static String info() {
-        if (countPlayers < 0) {
-            throw new RuntimeException("Количество игроков не может быть отрицательным");
-        } else if (countPlayers < PLAYERS_ON_FIELD) {
-            return "Команды неполные. На поле ещё есть  " + (PLAYERS_ON_FIELD - countPlayers) + " мест";
-        } else {
-            return "На поле нет свободных мест";
+    public void run() {
+        stamina--;
+        System.out.println("Игрок " + name + " побежал, выносливость - " + stamina);
+        if (stamina <= MIN_STAMINA) {
+            game.removePlayer(this);
+            System.out.println("Игрок  " + name + " под номером " + gameNumber + " выбыл");
         }
+
+    }
+
+    @Override
+    public String toString() {
+        return "Игрок " + name + "{выносливость=" + stamina + '\'' + ", игровой номер=" + gameNumber + '}';
     }
 }
