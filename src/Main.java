@@ -1,35 +1,33 @@
-import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
-        Random random = new Random();
-        System.out.println(Players.info());
-        Players player1 = Players.addNewPlayer();
-        Players player2 = Players.addNewPlayer();
-        Players player3 = Players.addNewPlayer();
-        Players player4 = Players.addNewPlayer();
-        System.out.print("Игроков на поле : " + Players.getCountPlayers() + " ");
-        System.out.println(Players.info());
-        Players player5 = Players.addNewPlayer();
-        Players player6 = Players.addNewPlayer();
-        System.out.println("Игроков на поле : " + Players.getCountPlayers());
 
-        Players player7 = Players.addNewPlayer();
-        Players player8 = Players.addNewPlayer();
-        System.out.print("Игроков на поле : " + Players.getCountPlayers() + " ");
-        System.out.println(Players.info());
+        Game game = new Game();
+        System.out.println(game.getPlayers());
+        game.info();
 
-        player2.runUntilTired();
-        System.out.println("Игроков на поле : " + Players.getCountPlayers());
-        player7.runUntilTired();
-        System.out.println("Игроков на поле : " + Players.getCountPlayers());
-        System.out.println(Players.info());
-        player1.runUntilTired();
-        System.out.println("Игроков на поле : " + Players.getCountPlayers());
-        System.out.println(Players.info());
-        player8.runUntilTired();
-        System.out.println("Игроков на поле : " + Players.getCountPlayers());
-        System.out.println(Players.info());
+        game.addNewPlayer("Василий", 2);
+        game.addNewPlayer("Алексей", 41);
+        game.addNewPlayer("Игнат", 22);
 
+
+        System.out.println(game.getPlayers());
+        game.addNewPlayer("Михаил", 6);
+        game.addNewPlayer("Александр", 7);
+        game.addNewPlayer("Василий", 11);
+        System.out.println(game.getPlayers());
+
+
+        game.addNewPlayer("Борис", 54);
+        System.out.println(game.getPlayers());
+
+        game.getPlayers().get(0).run();
+        game.getPlayers().get(3).run();
+
+        System.out.println(game.isRepeatName("Алексей"));
+        System.out.println(game.isRepeatName("Боб"));
+
+        game.reduceStamina(game.getPlayers().get(4));
+        game.info();
     }
 }
